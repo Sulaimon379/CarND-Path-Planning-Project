@@ -1,5 +1,30 @@
 # CarND-Path-Planning-Project
 Self-Driving Car Engineer Nanodegree Program
+
+### Reflection
+
+![alt text](screenshots/begin.png)![alt text](screenshots/later.png)
+
+The objective of this project is to develop a model to guide a car to drive down an approx. 7 miles highway in a simulator while staying in the right three lanes, without exceeding speed limit, minimizing acceleration & jerk and effectively staying within its current lane. The limits/conditions are:
+
+    max speed: 50 miles/hour
+    max accelerate 10 m/s^2
+    max jerk 10 m/s^3 (derivative of acceleration)
+
+Path generation is handled in the Frenet coordinates (s & d). The s coordinate is the longitudinal distance down the lane, while the d coordinate is the lateral position on the road. The track is approx. 69457 long to the s coordinate has a range of up to 0 - 69456m.  There are three lanes of equal width which are 4 meters wide, so d value for left lane will be 0 - 4, for center lane 4 - 8, and for Right lane 8 – 12.
+
+The x,y coordinates generated directly from s,d coordinates using only the provided waypoints resulted in high acceleration or jerk around the waypoints so we use three waypoints at 30 meters interval and interpolate a smooth path between these using spline interpolation.
+
+Changing lanes
+
+When the car finds itself behind another slower-moving vehicle, it slows down its speed and attempt to select and switch to an open, safe lane. We were provided with data points from Sensor Fusion Data of other cars traveling on the same side with our car which tells us the s & d coordinates of these cars when deciding on lane change. There are safety issues to consider when changing lanes; the car considers a lane not open if it detects the following:
+
+If no car ahead of us, maintain a reference velocity of 49.5 miles/hour
+
+If there is there a car in our lane, in front of us within 30 meters, slow down by reducing speed by 0.224 and if speed is now lower than 49.5, increase speed also by 0.224 and check to make a lane change.
+
+We assigned cost for choice of lane to switch to base on the lane itself, average speed on the track, 10m buffer for collision cost.
+
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases).
